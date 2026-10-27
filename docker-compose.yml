@@ -1,0 +1,32 @@
+# docker compose up --build
+# then, once: docker compose exec ollama ollama pull llama3.2
+# (not pulled automatically — a multi-GB download on every `up` would be a
+# surprising default; see README for why and for smaller model options)
+services:
+  ollama:
+    image: mirror.gcr.io/ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: deployments/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_HOST: "http://ollama:11434"
+      OLLAMA_MODEL: "llama3.2"
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+volumes:
+  ollama-data:

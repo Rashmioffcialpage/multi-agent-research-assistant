@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+*.egg-info
+
+# Local dev / IDE
+.vscode/
+.idea/
+*.swp
+
+# Scratch dir used for local-only Docker build caching, never committed.
+.build-cache/
